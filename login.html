@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Voting System</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f0f0;
+    }
+
+    header {
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      padding: 1em;
+    }
+
+    main {
+      max-width: 600px;
+      margin: 20px auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    #ageVerification, .candidate, #resultsPage {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    input {
+      padding: 10px;
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      background-color: #4caf50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    h2 {
+      color: #333;
+    }
+
+    p {
+      margin: 10px 0;
+    }
+
+    /* Candidate styling */
+    .candidate {
+      background-color: #f9f9f9;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Candidate button styling */
+    .candidate button {
+      background-color: #3498db;
+    }
+
+    .candidate button:hover {
+      background-color: #2980b9;
+    }
+
+    /* Voting results styling */
+    #resultsPage {
+      display: none;
+    }
+
+    #resultsPage a {
+      color: #3498db;
+      text-decoration: none;
+    }
+
+    #resultsPage a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Online Voting System</h1>
+  </header>
+
+  <main>
+    <div id="ageVerification">
+      <label for="age">Enter your age: </label>
+      <input type="number" id="age" min="0" required>
+      <button onclick="checkAge()">Verify Age</button>
+    </div>
+
+    <div class="candidate" id="candidate1" style="display: none;">
+      <h2>Candidate 1</h2>
+      <button onclick="vote(1)">Vote</button>
+      <p>Votes: <span id="votes1">0</span></p>
+    </div>
+
+    <div class="candidate" id="candidate2" style="display: none;">
+      <h2>Candidate 2</h2>
+      <button onclick="vote(2)">Vote</button>
+      <p>Votes: <span id="votes2">0</span></p>
+    </div>
+
+    <div id="resultsPage">
+      <h2>Results</h2>
+      <p>Candidate 1 Votes: <span id="resultVotes1">0</span></p>
+      <p>Candidate 2 Votes: <span id="resultVotes2">0</span></p>
+      <p><a href="index.html" onclick="resetVotes()">Back to Home</a></p>
+    </div>
+  </main>
+
+  <script>
+    // Simple voting system logic
+    let votes1 = 0;
+    let votes2 = 0;
+    let selectedCandidate;
+
+    function checkAge() {
+      const ageInput = document.getElementById("age");
+      const age = parseInt(ageInput.value, 10);
+
+      if (isNaN(age) || age < 0) {
+        alert("Please enter a valid age.");
+        return;
+      }
+
+      if (age < 18) {
+        alert("You must be at least 18 years old to vote.");
+      } else {
+        // Check if the user has already voted
+        const hasVoted = localStorage.getItem("hasVoted");
+
+        if (hasVoted) {
+          alert("You have already voted. One vote per user is allowed.");
+          showResults();
+        } else {
+          // Hide age verification section and show candidate sections
+          document.getElementById("ageVerification").style.display = "none";
+          document.getElementById("candidate1").style.display = "block";
+          document.getElementById("candidate2").style.display = "block";
+        }
+      }
+    }
+
+    function vote(candidate) {
+      // Check if the user has already voted
+      const hasVoted = localStorage.getItem("hasVoted");
+
+      if (hasVoted) {
+        alert("You have already voted. One vote per user is allowed.");
+        showResults();
+      } else {
+        // Check if the user has already voted for a candidate
+        if (selectedCandidate !== undefined) {
+          alert("You have already voted for a candidate. Your last vote will be counted.");
+        }
+
+        if (candidate === 1) {
+          votes1++;
+          document.getElementById("votes1").innerText = votes1;
+          selectedCandidate = 1;
+        } else if (candidate === 2) {
+          votes2++;
+          document.getElementById("votes2").innerText = votes2;
+          selectedCandidate = 2;
+        } else {
+          alert("Invalid candidate");
+        }
+
+        // Set a flag in local storage to indicate that the user has voted
+        localStorage.setItem("hasVoted", "true");
+      }
+    }
+
+    function showResults() {
+      document.getElementById("candidate1").style.display = "none";
+      document.getElementById("candidate2").style.display = "none";
+      document.getElementById("resultsPage").style.display = "block";
+
+      // Display the final vote counts
+      document.getElementById("resultVotes1").innerText = votes1;
+      document.getElementById("resultVotes2").innerText = votes2;
+    }
+
+    function resetVotes() {
+      localStorage.removeItem("hasVoted");
+      location.reload(); // Reload the page to reset the voting state
+    }
+  </script>
+</body>
+</html>

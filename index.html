@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Voting System - Home</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f0f0;
+    }
+
+    header {
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      padding: 1em;
+    }
+
+    main {
+      max-width: 600px;
+      margin: 20px auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    input {
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      background-color: #4caf50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    p {
+      margin-top: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Online Voting System</h1>
+  </header>
+
+  <main>
+    <h2>Candidate Registration</h2>
+    <form id="registrationForm" onsubmit="registerCandidate(event)">
+      <label for="candidateName">Candidate Name:</label>
+      <input type="text" id="candidateName" required>
+
+      <label for="Address">Address:</label>
+      <input type="text" id="Address" required>
+
+      <label for="tel">Phone No:</label>
+      <input type="tel" id="tel" required>
+
+      <label for="dob">Date of Birth:</label>
+      <input type="date" id="dob" required>
+
+      <button type="submit">Register</button>
+    </form>
+
+    <p>Already registered? <a href="login.html">Login</a></p>
+  </main>
+
+  <script>
+    function registerCandidate(event) {
+      event.preventDefault();
+
+      const candidateName = document.getElementById("candidateName").value;
+      const Address = document.getElementById("Address").value;
+      const tel = document.getElementById("tel").value;
+      const dob = document.getElementById("dob").value;
+
+      // Calculate age based on date of birth
+      const today = new Date();
+      const birthDate = new Date(dob);
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const monthDiff = today.getMonth() - birthDate.getMonth();
+      
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+
+      // In a real-world scenario, you would send this data to a server for secure storage.
+      // Here, we'll just display an alert with the registered information.
+      alert(`Candidate registered:\nName: ${candidateName}\nAddress: ${Address}\nPhone No: ${tel}\nDate of Birth: ${dob}\nAge: ${age} years`);
+  
+    }
+  </script>
+</body>
+</html>
